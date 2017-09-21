@@ -29,5 +29,8 @@ def main(argv):
 	wb_name = 'CryptoChartInfo' + dt[0:10] + '.xlsx'
 	m_wb.save(wb_name)
 	
+	print('it worked')
+	
 if __name__ == "__main__":
 	main(sys.argv[1:])
+	
