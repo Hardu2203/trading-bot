@@ -1,5 +1,5 @@
 import sys, getopt
-import datetime
+from datetime import datetime
 from openpyxl import Workbook
 
 from botchart import BotChart
@@ -25,7 +25,7 @@ def main(argv):
 	    wslist.append(row_list)
 	
 	# Save
-	dt = str(datetime.datetime.now())
+	dt = str(datetime.now())
 	wb_name = 'CryptoChartInfo' + dt[0:10] + '.xlsx'
 	m_wb.save(wb_name)
 	
