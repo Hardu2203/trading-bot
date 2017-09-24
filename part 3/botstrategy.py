@@ -1,8 +1,11 @@
 from botlog import BotLog
 from botindicators import BotIndicators
 from bottrade import BotTrade
+from openpyxl.drawing import spreadsheet_drawing
+from xmllib import newline
 
 class BotStrategy(object):
+	
 	def __init__(self):
 		self.output = BotLog()
 		self.prices = []
@@ -12,6 +15,7 @@ class BotStrategy(object):
 		self.currentClose = ""
 		self.numSimulTrades = 1
 		self.indicators = BotIndicators()
+		self.spreadsheet = []
 
 	def tick(self,candlestick):
 		print candlestick.priceAverage
@@ -26,6 +30,8 @@ class BotStrategy(object):
 		self.evaluatePositions()
 		self.updateOpenTrades()
 		self.showPositions()
+		mess = str(candlestick['weightedAverage'])
+		self.GenSpreadsheetInfo(self.prices)
 
 	def evaluatePositions(self):
 		openTrades = []
@@ -34,11 +40,11 @@ class BotStrategy(object):
 				openTrades.append(trade)
 
 		if (len(openTrades) < self.numSimulTrades):
-			if (self.currentPrice < self.indicators.movingAverage(self.prices,15)):
+			if (self.currentPrice < self.indicators.movingAverage(self.prices,20)):
 				self.trades.append(BotTrade(self.currentPrice,stopLoss=.0001))
 
 		for trade in openTrades:
-			if (self.currentPrice > self.indicators.movingAverage(self.prices,15)):
+			if (self.currentPrice > self.indicators.movingAverage(self.prices,20)):
 				trade.close(self.currentPrice)
 
 	def updateOpenTrades(self):
@@ -49,5 +55,31 @@ class BotStrategy(object):
 	def showPositions(self):
 		for trade in self.trades:
 			trade.showTrade()
+			
+	def plotData(self):
+		print 'Plot Now'
+	
+	def GenSpreadsheetInfo(self, prices):
+		newList = []
+		
+		if len(self.spreadsheet) == 0:
+		    newList.append("Price")
+		    newList.append("20_Per_MA")
+		    newList.append("50_per_MA")
+		    newList.append("TOP_STD")
+		    newList.append("BOT_STD")
+		    self.spreadsheet.append(newList)
+		
+		newList = []
+		newList.append(self.currentPrice)
+		newList.append(self.indicators.movingAverage(self.prices,20))
+		newList.append(self.indicators.movingAverage(self.prices,50))
+		newList.append(self.currentPrice + (2*self.indicators.standardDeviation(self.prices,20)))
+		newList.append(self.currentPrice - (2*self.indicators.standardDeviation(self.prices,20)))
+		self.spreadsheet.append(newList)
+		
+	def GetSpreadsheetInfo():
+		return self.spreadsheet
+		
 
 		

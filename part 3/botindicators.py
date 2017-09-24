@@ -53,3 +53,6 @@ class BotIndicators(object):
  			return rsi[-1]
  		else:
  			return 50 # output a neutral amount until enough prices in list to calculate RSI
+ 		
+	def standardDeviation (self, datapoints, period):
+		return numpy.std([datapoints[-period:]])
