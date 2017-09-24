@@ -1,6 +1,8 @@
 from botlog import BotLog
 from botindicators import BotIndicators
 from bottrade import BotTrade
+from openpyxl.drawing import spreadsheet_drawing
+from xmllib import newline
 
 class BotStrategy(object):
 	
@@ -28,7 +30,7 @@ class BotStrategy(object):
 		self.updateOpenTrades()
 		self.showPositions()
 		mess = str(candlestick['weightedAverage'])
-		self.GenSpreadsheetInfo(message="Price: "+str(candlestick['weightedAverage'])+"\tMoving Average: "+str(self.indicators.movingAverage(self.prices,15)))
+		self.GenSpreadsheetInfo(self.prices)
 
 	def evaluatePositions(self):
 		openTrades = []
@@ -41,7 +43,7 @@ class BotStrategy(object):
 				self.trades.append(BotTrade(self.currentPrice,stopLoss=.0001))
 
 		for trade in openTrades:
-			if (self.currentPrice > self.indicators.movingAverage(self.prices,15)):
+			if (self.currentPrice > self.indicators.movingAverage(self.prices,20)):
 				trade.close(self.currentPrice)
 
 	def updateOpenTrades(self):
@@ -56,13 +58,26 @@ class BotStrategy(object):
 	def plotData(self):
 		print 'Plot Now'
 	
-	def GenSpreadsheetInfo(self, message):
+	def GenSpreadsheetInfo(self, prices):
 		newList = []
-		strMes = str(message.encode('utf8'))
-		newList.append(strMes)
+		
+		if len(self.spreadsheet) == 0:
+		    newList.append("Price")
+		    newList.append("20_Per_MA")
+		    newList.append("50_per_MA")
+		    newList.append("TOP_STD")
+		    newList.append("BOT_STD")
+		    self.spreadsheet.append(newList)
+		
+		newList = []
+		newList.append(self.currentPrice)
+		newList.append(self.indicators.movingAverage(self.prices,20))
+		newList.append(self.indicators.movingAverage(self.prices,50))
+		newList.append(self.currentPrice + (2*self.indicators.standardDeviation(self.prices,20)))
+		newList.append(self.currentPrice - (2*self.indicators.standardDeviation(self.prices,20)))
 		self.spreadsheet.append(newList)
 		
-	def GetSpreadsheetInfo(self,message):
+	def GetSpreadsheetInfo():
 		return self.spreadsheet
 		
 
