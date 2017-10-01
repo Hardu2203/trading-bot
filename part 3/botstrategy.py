@@ -18,7 +18,7 @@ class BotStrategy(object):
 		self.spreadsheet = []
 
 	def tick(self,candlestick):
-		print candlestick.priceAverage
+# 		print candlestick.priceAverage
 		self.currentPrice = float(candlestick.priceAverage)
 		self.prices.append(self.currentPrice)
 		
@@ -55,9 +55,6 @@ class BotStrategy(object):
 	def showPositions(self):
 		for trade in self.trades:
 			trade.showTrade()
-			
-	def plotData(self):
-		print 'Plot Now'
 	
 	def GenSpreadsheetInfo(self, prices):
 		newList = []
