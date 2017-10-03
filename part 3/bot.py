@@ -41,7 +41,7 @@ def main(argv):
             startTime = arg
         elif opt in ("-e"):
             endTime = arg
-
+#asda
     if (startTime):
         chart = BotChart("poloniex","BTC_XMR",300)
 
