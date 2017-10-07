@@ -42,3 +42,5 @@ class BotCandlestick(object):
             return True
         else:
             return False
+        
+        #from Hardu
